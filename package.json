@@ -1,0 +1,14 @@
+{
+  "name": "kurs-bca",
+  "version": "1.0.0",
+  "description": "REST API for BCA kurs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "edhi.uchiha@gmail.com",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
