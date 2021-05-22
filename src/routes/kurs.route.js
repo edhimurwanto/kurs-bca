@@ -5,6 +5,17 @@ import { resNotFound, resOk } from '../utils/response.util';
 const kursService = new KursService();
 
 export default Router()
+    .get('/', async (req, res) => {
+        try {
+
+            const { startDate, endDate } = req.query
+            const data = await kursService.search(startDate, endDate);
+
+            resOk(res, data);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    })
 
     .post('/', async (req, res) => {
         try {

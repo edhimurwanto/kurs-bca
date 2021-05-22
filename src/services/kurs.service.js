@@ -10,6 +10,19 @@ export default class KursService {
         return repository(Kurs);
     }
 
+    async search(startDate, endDate) {
+        if (startDate && endDate) {
+            let findArgs = {
+                where: {
+                    date: Between(startDate, endDate),
+                }
+            };
+            return await this.kursRepository().find(findArgs);
+        } else {
+            return await this.kursRepository().find();
+        }
+    }
+
     async findBySymbolAndDate(symbol, date) {
 
         const kurs = await this.kursRepository().createQueryBuilder('kurs')
