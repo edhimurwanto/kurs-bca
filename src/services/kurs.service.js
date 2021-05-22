@@ -94,4 +94,12 @@ export default class KursService {
         return await this.kursRepository().save(payload);
     }
 
+    async deleteByDate(date) {
+        const kurs = await this.kursRepository().findOne({ date });
+        if (!kurs) {
+            throw new Error(`Entity not found!`);
+        }
+        return await this.kursRepository().delete({ date });
+    }
+
 }

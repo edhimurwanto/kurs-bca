@@ -45,3 +45,17 @@ export default Router()
             }
         }
     })
+
+    .delete('/:date', async (req, res) => {
+        try {
+            const { date } = req.params;
+            await kursService.deleteByDate(date);
+            res.sendStatus(204);
+        } catch (error) {
+            if (error.message) {
+                resNotFound(res, error.message);
+            } else {
+                res.status(500).json({ message: error.message });
+            }
+        }
+    })
