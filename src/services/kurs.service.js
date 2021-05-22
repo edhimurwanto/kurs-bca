@@ -28,7 +28,7 @@ export default class KursService {
             .leftJoinAndSelect('kurs.type', 'type')
             .leftJoinAndSelect('kurs.symbol', 'symbol')
             .where('kurs.date >= :startDate', { startDate })
-            .where('kurs.date <= :endDate', { endDate })
+            .andWhere('kurs.date <= :endDate', { endDate })
             .andWhere('symbol.code = :code', { code: symbol })
             .getMany();
 
