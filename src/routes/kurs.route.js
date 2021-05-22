@@ -18,3 +18,19 @@ export default Router()
             res.status(500).json({ message: error.message });
         }
     })
+
+    .put('/', async (req, res) => {
+        try {
+
+            let kurs = { ...req.body };
+
+            kurs = await kursService.update(kurs);
+            resOk(res, kurs);
+        } catch (error) {
+            if (error.message) {
+                resNotFound(res, error.message);
+            } else {
+                res.status(500).json({ message: error.message });
+            }
+        }
+    })

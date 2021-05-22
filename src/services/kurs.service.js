@@ -51,4 +51,34 @@ export default class KursService {
 
     }
 
+    async update(kursPayload) {
+        let kurs = await this.findBySymbolAndDate(kursPayload.symbol, kursPayload.date);
+
+        if (!kurs) {
+            throw new Error(`Entity not found!`);
+        }
+
+        const eRate = { name: 'E-Rate', ...kursPayload.e_rate };
+        const tt = { name: 'TT Counter', ...kursPayload.tt_counter };
+        const bn = { name: 'Bank Notes', ...kursPayload.bank_notes };
+
+        const symbol = await currenciesService.findByCode(kursPayload.symbol);
+        if (!symbol) {
+            throw new Error(`Symbol not found!`);
+        }
+
+        const payload = {
+            id: kurs.id,
+            symbol,
+            type: [
+                eRate,
+                tt,
+                bn
+            ],
+            date: kursPayload.date
+        }
+
+        return await this.kursRepository().save(payload);
+    }
+
 }
