@@ -17,6 +17,19 @@ export default Router()
         }
     })
 
+    .get('/:symbol', async (req, res) => {
+        try {
+
+            const { startDate, endDate } = req.query
+            const { symbol } = req.params
+            const data = await kursService.findBySymbolWithStartDateAndEndDate(symbol, startDate, endDate);
+
+            resOk(res, data);
+        } catch (error) {
+            res.status(500).json({ message: error.message });
+        }
+    })
+
     .post('/', async (req, res) => {
         try {
 

@@ -23,6 +23,18 @@ export default class KursService {
         }
     }
 
+    async findBySymbolWithStartDateAndEndDate(symbol, startDate, endDate) {
+        const kurs = await this.kursRepository().createQueryBuilder('kurs')
+            .leftJoinAndSelect('kurs.type', 'type')
+            .leftJoinAndSelect('kurs.symbol', 'symbol')
+            .where('kurs.date >= :startDate', { startDate })
+            .where('kurs.date <= :endDate', { endDate })
+            .andWhere('symbol.code = :code', { code: symbol })
+            .getMany();
+
+        return kurs;
+    }
+
     async findBySymbolAndDate(symbol, date) {
 
         const kurs = await this.kursRepository().createQueryBuilder('kurs')
