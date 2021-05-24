@@ -1,8 +1,10 @@
 import { Between, getRepository as repository } from 'typeorm';
 import Kurs from '../models/kurs.models';
 import CurrenciesService from './currencies.service';
+import KursCategoriesService from './kurs-categories.service';
 
 const currenciesService = new CurrenciesService();
+const kursCategoriesService = new KursCategoriesService();
 
 export default class KursService {
 
@@ -55,7 +57,7 @@ export default class KursService {
         } else {
             const eRate = { name: 'E-Rate', ...kursPayload.e_rate };
             const tt = { name: 'TT Counter', ...kursPayload.tt_counter };
-            const bn = { name: 'Bank Notes', ...kursPayload.bank_notes };
+            const bn = { name: 'Bank Notes', ...kursPayload.bank_note };
 
             const symbol = await currenciesService.findByCode(kursPayload.symbol);
             if (!symbol) {
@@ -64,7 +66,7 @@ export default class KursService {
 
             const payload = {
                 symbol,
-                type: [
+                types: [
                     eRate,
                     tt,
                     bn
@@ -80,12 +82,12 @@ export default class KursService {
         let kurs = await this.findBySymbolAndDate(kursPayload.symbol, kursPayload.date);
 
         if (!kurs) {
-            throw new Error(`Entity not found!`);
+            throw new Error(`Kurs not found!`);
         }
 
         const eRate = { name: 'E-Rate', ...kursPayload.e_rate };
         const tt = { name: 'TT Counter', ...kursPayload.tt_counter };
-        const bn = { name: 'Bank Notes', ...kursPayload.bank_notes };
+        const bn = { name: 'Bank Notes', ...kursPayload.bank_note };
 
         const symbol = await currenciesService.findByCode(kursPayload.symbol);
         if (!symbol) {
@@ -95,7 +97,7 @@ export default class KursService {
         const payload = {
             id: kurs.id,
             symbol,
-            type: [
+            types: [
                 eRate,
                 tt,
                 bn
@@ -107,11 +109,13 @@ export default class KursService {
     }
 
     async deleteByDate(date) {
-        const kurs = await this.kursRepository().findOne({ date });
+        const kurs = await this.kursRepository().findOne({ date }, { relations: 'types'});
         if (!kurs) {
-            throw new Error(`Entity not found!`);
+            throw new Error(`Kurs not found!`);
         }
-        return await this.kursRepository().delete({ date });
+
+        await kursCategoriesService.delete(kurs.types);
+        return await this.kursRepository().remove(kurs);
     }
 
 }

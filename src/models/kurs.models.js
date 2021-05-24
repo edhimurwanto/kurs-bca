@@ -2,11 +2,11 @@ import BaseModels from "./base.models";
 
 export default class Kurs extends BaseModels {
 
-    constructor(id, symbol, type, date){
+    constructor(id, symbol, types, date){
         super();
         this.id = id;
         this.symbol = symbol;
-        this.type = type;
+        this.types = types;
         this.date = date;
     }
 

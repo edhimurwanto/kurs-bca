@@ -1,28 +1,13 @@
 import { Router } from 'express';
-import CurrenciesService from '../services/currencies.service';
+import CurrenciesController from '../controllers/currencies.controller';
 
-const currenciesService = new CurrenciesService();
+const currenciesController = new CurrenciesController();
 
 export default Router()
     .get('/', async (req, res) => {
-        try {
-            const data = await currenciesService.findAll();
-
-            res.json({ data });
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+        currenciesController.getAll(req, res);
     })
 
     .post('/', async (req, res) => {
-        try {
-
-            let currency = { ...req.body };
-
-            currency = await currenciesService.create(currency);
-
-            res.status(201).json(currency);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+        currenciesController.create(req, res);
     })

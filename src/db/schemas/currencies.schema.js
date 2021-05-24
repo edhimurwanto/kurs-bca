@@ -18,11 +18,13 @@ const CurrenciesSchema = new EntitySchema({
             type: 'varchar',
             length: 3,
             nullable: false,
+            unique: true,
         },
         name: {
             type: 'varchar',
             length: 100,
             nullable: false,
+            unique: true,
         },
         description: {
             type: 'varchar',

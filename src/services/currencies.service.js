@@ -19,18 +19,43 @@ export default class CurrenciesService {
         return await this.currenciesRepository().findOne({ code });
     }
 
-    async create(currencyPayload) { 
+    async findByCodeOrName(code, name) {
+        const cur = await this.currenciesRepository().createQueryBuilder('cur')
+            .where('cur.code <= :code', { code })
+            .orWhere('cur.name = :name', { name })
+            .getOne();
+
+        return cur;
+    }
+
+    async create(currencyPayload) {
+
+        const cur = this.findByCodeOrName(currencyPayload.code, currencyPayload.name);
+
+        if (cur) {
+            throw new Error(`Currency already exist!`);
+        }
+
         return this.currenciesRepository().save(currencyPayload);
     }
 
     async update(currencyPayload) {
         const currency = this.findById(currencyPayload.id);
-        if(currency){
-            return await this.currenciesRepository().save(currencyPayload);
-        }
-     }
 
-    async delete(id) { 
+        if (!currency) {
+            throw new Error(`Currency not found!`);
+        }
+
+        const cur = this.findByCodeOrName(currencyPayload.code, currencyPayload.name);
+
+        if (cur) {
+            throw new Error(`Currency already exist!`);
+        }
+
+        return await this.currenciesRepository().save(currencyPayload);
+    }
+
+    async delete(id) {
         return await this.currenciesRepository().delete(id);
     }
 

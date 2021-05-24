@@ -15,19 +15,21 @@ export default class KursCategoriesService {
         return await this.kursCategoriesRepository().findOne({ id });
     }
 
-    async create(kursCategoryPayload) { 
+    async create(kursCategoryPayload) {
         return this.kursCategoriesRepository().save(kursCategoryPayload);
     }
 
     async update(kursCategoryPayload) {
         const currency = this.findById(kursCategoryPayload.id);
-        if(currency){
+        if (currency) {
             return await this.kursCategoriesRepository().save(kursCategoryPayload);
         }
-     }
+    }
 
-    async delete(id) { 
-        return await this.kursCategoriesRepository().delete(id);
+    async delete(kursCategories) {
+        for (let type of kursCategories) {
+            await this.kursCategoriesRepository().remove(type);
+        }
     }
 
 }

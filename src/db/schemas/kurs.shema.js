@@ -37,12 +37,13 @@ const KursSchema = new EntitySchema({
             inverseSide: 'symbol',
             eager: true
         },
-        type: {
+        types: {
             target: 'KursCategories',
             type: 'many-to-many',
             joinTable: true,
             cascade: true,
-            eager: true
+            eager: true,
+            onDelete: 'CASCADE'
         }
     }
 });

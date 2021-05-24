@@ -10,9 +10,11 @@
   "author": "edhi.uchiha@gmail.com",
   "license": "ISC",
   "dependencies": {
+    "body-parser": "^1.19.0",
     "dotenv": "^9.0.2",
     "esm": "^3.2.25",
     "express": "^4.17.1",
+    "joi": "^17.4.0",
     "mysql": "^2.18.1",
     "typeorm": "^0.2.32"
   }

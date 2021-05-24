@@ -1,74 +1,27 @@
 import { Router } from 'express';
-import KursService from '../services/kurs.service';
-import { resNotFound, resOk } from '../utils/response.util';
+import KursController from '../controllers/kurs.controller';
+import kursPayload from '../dto/kurs-payload.dto';
+import validator from '../utils/validator'
 
-const kursService = new KursService();
+const kursController = new KursController();
 
 export default Router()
     .get('/', async (req, res) => {
-        try {
-
-            const { startDate, endDate } = req.query
-            const data = await kursService.search(startDate, endDate);
-
-            resOk(res, data);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+        kursController.getByStartDateAndEndDate(req, res);
     })
 
     .get('/:symbol', async (req, res) => {
-        try {
-
-            const { startDate, endDate } = req.query
-            const { symbol } = req.params
-            const data = await kursService.findBySymbolWithStartDateAndEndDate(symbol, startDate, endDate);
-
-            resOk(res, data);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+        kursController.getBySymbol(req, res);
     })
 
-    .post('/', async (req, res) => {
-        try {
-
-            let kurs = { ...req.body };
-
-            kurs = await kursService.create(kurs);
-
-            res.status(201).json(kurs);
-        } catch (error) {
-            res.status(500).json({ message: error.message });
-        }
+    .post('/', validator(kursPayload), async (req, res) => {
+        kursController.create(req, res);
     })
 
-    .put('/', async (req, res) => {
-        try {
-
-            let kurs = { ...req.body };
-
-            kurs = await kursService.update(kurs);
-            resOk(res, kurs);
-        } catch (error) {
-            if (error.message) {
-                resNotFound(res, error.message);
-            } else {
-                res.status(500).json({ message: error.message });
-            }
-        }
+    .put('/', validator(kursPayload), async (req, res) => {
+        kursController.update(req, res);
     })
 
     .delete('/:date', async (req, res) => {
-        try {
-            const { date } = req.params;
-            await kursService.deleteByDate(date);
-            res.sendStatus(204);
-        } catch (error) {
-            if (error.message) {
-                resNotFound(res, error.message);
-            } else {
-                res.status(500).json({ message: error.message });
-            }
-        }
+        kursController.delete(req, res);
     })
