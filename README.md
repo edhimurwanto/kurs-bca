@@ -20,10 +20,6 @@ Then running application with command bellow.
 ```
 npm start
 ```
-If application successfully running, then command will show log like this.
-
-![Alt text](https://github.com/edhiuchiha/wallet-app/blob/master/src/assets/launch.png)
-
 ## Swagger Documentations
 
 ## Running the tests
